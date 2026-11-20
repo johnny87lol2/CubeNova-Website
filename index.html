@@ -1,0 +1,514 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CubeNova</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: light, airy launcher site. Hero = copy + launcher window mock; then features, a live GUI-scale demo for the Client mod, downloads, FAQ. */
+:root {
+  --bg: #fbfdfb;
+  --surface: #ffffff;
+  --surface-2: #f2f8f3;
+  --ink: #0e1f14;
+  --muted: #526659;
+  --line: #dbe7de;
+  --accent: #12c25a;
+  --accent-text: #0a7a38;
+  --accent-ink: #052d16;
+  --accent-soft: #e4f7ea;
+  --sky-a: #bfe9d0; --sky-b: #effaf3;
+  --ground-a: #2e9a57; --ground-b: #1f6f3f;
+  --shadow: 0 1px 2px rgba(10,40,20,.06), 0 12px 32px -12px rgba(10,60,30,.18);
+  --f-display: "Space Grotesk", "Noto Sans TC", system-ui, sans-serif;
+  --f-body: "Inter", "Noto Sans TC", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #07110b; --surface: #0e1a12; --surface-2: #122219; --ink: #e8f4ec; --muted: #93a99a;
+    --line: #1f3326; --accent: #2bea78; --accent-text: #3df083; --accent-ink: #032010; --accent-soft: #11301c;
+    --sky-a: #0f2a1b; --sky-b: #0a1a11; --ground-a: #1d6a3b; --ground-b: #124528;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 16px 40px -14px rgba(0,0,0,.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #07110b; --surface: #0e1a12; --surface-2: #122219; --ink: #e8f4ec; --muted: #93a99a;
+  --line: #1f3326; --accent: #2bea78; --accent-text: #3df083; --accent-ink: #032010; --accent-soft: #11301c;
+  --sky-a: #0f2a1b; --sky-b: #0a1a11; --ground-a: #1d6a3b; --ground-b: #124528;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 16px 40px -14px rgba(0,0,0,.7);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.65 var(--f-body);
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.12; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+
+.wrap { width: min(1120px, 100%); margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* header */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+header .wrap { display: flex; align-items: center; gap: 20px; height: 62px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 700 1.25rem var(--f-display); letter-spacing: -.02em; }
+.brand img { width: 34px; height: 34px; }
+nav.links { display: flex; gap: 6px; margin-left: auto; }
+nav.links a { text-decoration: none; color: var(--muted); font-size: .93rem; font-weight: 500; padding: 8px 12px; border-radius: 8px; }
+nav.links a:hover { color: var(--ink); background: var(--surface-2); }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; padding: 2px; background: var(--surface); }
+.lang button { font: 600 .8rem var(--f-body); border: 0; background: none; color: var(--muted); padding: 5px 10px; border-radius: 7px; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; gap: 8px; font: 600 .98rem var(--f-body); text-decoration: none; padding: 12px 20px; border-radius: 11px; border: 1px solid transparent; cursor: pointer; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.06); }
+.btn.ghost { border-color: var(--line); background: var(--surface); color: var(--ink); }
+.btn.ghost:hover { border-color: var(--accent); }
+.btn[aria-disabled="true"] { opacity: .55; cursor: default; pointer-events: none; }
+
+/* hero */
+.hero { padding-block: 64px 72px; position: relative; overflow: hidden; }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: 56px; align-items: center; }
+.eyebrow { font: 500 .78rem var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-text); }
+.hero h1 { font-size: clamp(2.4rem, 5.4vw, 4rem); margin-top: 14px; }
+.hero h1 em { font-style: normal; color: var(--accent-text); }
+.hero p.lead { margin-top: 20px; font-size: 1.1rem; color: var(--muted); max-width: 34rem; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 28px; font-size: .88rem; color: var(--muted); }
+.facts span::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 2px; background: var(--accent); margin-right: 8px; transform: translateY(-1px); }
+
+/* launcher mock */
+.win { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+.win-bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--surface-2); }
+.win-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.win-bar b { margin-left: 8px; font: 600 .78rem var(--f-body); color: var(--muted); }
+.win-body { display: grid; grid-template-columns: 140px minmax(0, 1fr); min-height: 330px; }
+.side { border-right: 1px solid var(--line); padding: 14px 10px; display: grid; gap: 4px; align-content: start; background: var(--surface-2); }
+.side div { font-size: .85rem; font-weight: 500; padding: 8px 10px; border-radius: 8px; color: var(--muted); }
+.side div.on { background: var(--accent-soft); color: var(--accent-text); font-weight: 600; }
+.main { padding: 20px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.main h4 { margin: 0; font: 600 .78rem var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.inst { display: flex; align-items: center; gap: 14px; padding: 14px; border: 1px solid var(--line); border-radius: 11px; background: var(--bg); }
+.inst .cube { width: 44px; height: 44px; border-radius: 10px; background: var(--accent-soft); display: grid; place-items: center; flex: none; }
+.inst .cube img { width: 30px; height: 30px; }
+.inst .meta { min-width: 0; flex: 1; }
+.inst .meta b { display: block; font: 600 .98rem var(--f-display); }
+.inst .meta span { font-size: .8rem; color: var(--muted); }
+.play { background: var(--accent); color: var(--accent-ink); font: 700 .85rem var(--f-body); padding: 9px 16px; border-radius: 9px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { font: 500 .76rem var(--f-mono); padding: 4px 9px; border-radius: 7px; background: var(--surface-2); border: 1px solid var(--line); color: var(--muted); }
+.chip.g { background: var(--accent-soft); border-color: transparent; color: var(--accent-text); }
+.bar { height: 7px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 72%; background: var(--accent); border-radius: 99px; }
+.note { font-size: .8rem; color: var(--muted); display: flex; justify-content: space-between; gap: 10px; }
+
+/* sections */
+section { padding-block: 76px; }
+section.alt { background: var(--surface-2); border-block: 1px solid var(--line); }
+.sec-head { max-width: 40rem; margin-bottom: 40px; }
+.sec-head h2 { font-size: clamp(1.8rem, 3.6vw, 2.5rem); margin-top: 10px; }
+.sec-head p { margin-top: 14px; color: var(--muted); font-size: 1.04rem; }
+
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; min-width: 0; }
+.card .ic { width: 38px; height: 38px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-text); display: grid; place-items: center; margin-bottom: 16px; }
+.card .ic svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.card h3 { font-size: 1.12rem; letter-spacing: -.01em; }
+.card p { margin-top: 8px; color: var(--muted); font-size: .94rem; }
+
+/* client */
+.client { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 48px; align-items: start; }
+.mods { display: grid; gap: 0; margin-top: 24px; border-top: 1px solid var(--line); }
+.mods div { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: .95rem; }
+.mods b { font-family: var(--f-display); font-weight: 600; }
+.mods span { color: var(--muted); }
+.vers { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; align-items: center; }
+.vers small { color: var(--muted); font-size: .85rem; margin-right: 4px; }
+
+.demo { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; min-width: 0; }
+.screen { --gs: 4; --eff: 2; container-type: inline-size; position: relative; aspect-ratio: 16 / 9; background: linear-gradient(180deg, var(--sky-a), var(--sky-b) 58%, var(--ground-a) 58%, var(--ground-b)); overflow: hidden; }
+.screen::after { content: ""; position: absolute; inset: 58% 0 0; background-image: linear-gradient(90deg, rgba(0,0,0,.14) 1px, transparent 1px), linear-gradient(0deg, rgba(0,0,0,.14) 1px, transparent 1px); background-size: 9cqw 9cqw; opacity: .55; }
+.hud { position: absolute; left: 1.5cqw; top: 1.5cqw; z-index: 2; display: grid; gap: calc(var(--u) * 2); --u: calc(var(--eff) * 0.16cqw); font-family: var(--f-mono); font-weight: 500; color: #fff; text-shadow: 0 0 calc(var(--u) * 2) rgba(0,0,0,.5); }
+.hud div { background: rgba(10,20,14,.55); border-left: calc(var(--u) * 2) solid var(--accent); padding: calc(var(--u) * 3) calc(var(--u) * 6); font-size: calc(var(--u) * 8); line-height: 1.3; width: max-content; }
+.hud.manual { --u: calc(var(--gs) * 0.16cqw); }
+.cross { position: absolute; left: 50%; top: 50%; width: 3cqw; height: 3cqw; transform: translate(-50%, -50%); z-index: 1; opacity: .8; }
+.cross::before, .cross::after { content: ""; position: absolute; background: #fff; mix-blend-mode: difference; }
+.cross::before { left: 0; right: 0; top: calc(50% - 1px); height: 2px; }
+.cross::after { top: 0; bottom: 0; left: calc(50% - 1px); width: 2px; }
+.ctrls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 14px 16px; border-top: 1px solid var(--line); }
+.ctrls label { font-size: .82rem; color: var(--muted); font-weight: 500; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; padding: 2px; background: var(--bg); }
+.seg button { font: 600 .82rem var(--f-mono); border: 0; background: none; color: var(--muted); padding: 6px 12px; border-radius: 7px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.demo-note { padding: 0 16px 14px; font-size: .84rem; color: var(--muted); }
+
+/* download */
+.dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.dl .card { display: grid; gap: 16px; align-content: start; }
+.dl .card h3 { font-size: 1.3rem; }
+.dl .card .row { margin-top: 2px; }
+.dl .btns { display: flex; flex-wrap: wrap; gap: 10px; }
+.sub { font-size: .85rem; color: var(--muted); }
+
+/* faq */
+.faq { max-width: 46rem; border-top: 1px solid var(--line); }
+details { border-bottom: 1px solid var(--line); padding: 18px 0; }
+summary { cursor: pointer; font: 600 1.05rem var(--f-display); list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; color: var(--accent-text); font-weight: 500; font-size: 1.3rem; line-height: 1; }
+details[open] summary::after { content: "–"; }
+details p { margin-top: 10px; color: var(--muted); font-size: .96rem; max-width: 40rem; }
+
+footer { border-top: 1px solid var(--line); padding-block: 36px; color: var(--muted); font-size: .86rem; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; justify-content: space-between; }
+footer .brand { font-size: 1.05rem; color: var(--ink); }
+footer .brand img { width: 26px; height: 26px; }
+
+@media (max-width: 900px) {
+  .hero .wrap, .client { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  nav.links { display: none; }
+  .lang { margin-left: auto; }
+}
+@media (max-width: 600px) {
+  .grid3, .dl { grid-template-columns: minmax(0, 1fr); }
+  .hero { padding-block: 40px 48px; }
+  section { padding-block: 56px; }
+  .win-body { grid-template-columns: 96px minmax(0, 1fr); }
+  .side div { padding: 7px 8px; font-size: .78rem; }
+  .mods div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="icon.png" alt="" width="34" height="34">CubeNova</a>
+    <nav class="links" aria-label="Main">
+      <a href="#features" data-i18n="nav_features">功能</a>
+      <a href="#client" data-i18n="nav_client">CubeNova Client</a>
+      <a href="#download" data-i18n="nav_download">下載</a>
+      <a href="#faq" data-i18n="nav_faq">常見問題</a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="zh" aria-pressed="true">中文</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <div class="eyebrow">Minecraft Launcher · Fabric</div>
+        <h1 data-i18n-html="hero_title">輕巧、快速的<br><em>Fabric</em> 啟動器</h1>
+        <p class="lead" data-i18n="hero_lead">CubeNova 只專注在 Fabric。自動安裝 Java、一鍵從 Modrinth 安裝模組,內建的 CubeNova Client 讓你一進遊戲就有 HUD、Freelook 和更高的 FPS。</p>
+        <div class="cta">
+          <a class="btn primary" href="#download" data-i18n="cta_dl">下載 CubeNova</a>
+          <a class="btn ghost" href="#client" data-i18n="cta_client">看看 Client Mod</a>
+        </div>
+        <div class="facts">
+          <span data-i18n="fact1">離線與 Microsoft 帳號</span>
+          <span data-i18n="fact2">開源</span>
+          <span data-i18n="fact3">自動更新</span>
+        </div>
+      </div>
+
+      <div class="win" aria-hidden="true">
+        <div class="win-bar"><i></i><i></i><i></i><b>CubeNova</b></div>
+        <div class="win-body">
+          <div class="side">
+            <div class="on" data-i18n="m_play">開始遊玩</div>
+            <div data-i18n="m_inst">實例</div>
+            <div data-i18n="m_store">模組商店</div>
+            <div data-i18n="m_cape">披風</div>
+            <div data-i18n="m_set">設定</div>
+          </div>
+          <div class="main">
+            <h4 data-i18n="m_last">上次遊玩</h4>
+            <div class="inst">
+              <div class="cube"><img src="icon.png" alt=""></div>
+              <div class="meta"><b>Fabric 1.21.4</b><span>CubeNova Client · Sodium · Lithium</span></div>
+              <div class="play" data-i18n="m_btn">啟動</div>
+            </div>
+            <div class="row"><span class="chip g">Java 21</span><span class="chip">Fabric 0.16</span><span class="chip">FPS Boost</span></div>
+            <div>
+              <div class="note"><span data-i18n="m_java">正在準備 Java</span><span>72%</span></div>
+              <div class="bar" style="margin-top:8px"><i></i></div>
+            </div>
+            <div class="note"><span data-i18n="m_acc">帳號</span><span>Microsoft</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="features" class="alt">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow" data-i18n="nav_features">功能</div>
+        <h2 data-i18n="feat_title">少一點選項,多一點好用</h2>
+        <p data-i18n="feat_lead">不用先搞懂 Forge、Quilt 或一堆版本。選版本、按啟動,其餘交給啟動器。</p>
+      </div>
+      <div class="grid3">
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg></div>
+          <h3 data-i18n="f1t">只做 Fabric</h3>
+          <p data-i18n="f1d">專心把一個模組載入器做好,安裝與更新都不需要額外設定。</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg></div>
+          <h3 data-i18n="f2t">離線與 Microsoft 帳號</h3>
+          <p data-i18n="f2d">可以用正版 Microsoft 帳號登入,也可以用離線帳號直接開始。</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 7h16l-1.5 11a2 2 0 0 1-2 1.7H7.5a2 2 0 0 1-2-1.7L4 7Z"/><path d="M8 7a4 4 0 0 1 8 0"/></svg></div>
+          <h3 data-i18n="f3t">Modrinth 模組商店</h3>
+          <p data-i18n="f3d">在啟動器裡搜尋並安裝模組,會自動挑選相容目前版本的檔案。</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg></div>
+          <h3 data-i18n="f4t">自動安裝 Java</h3>
+          <p data-i18n="f4d">每個 Minecraft 版本需要的 Java 都會自動下載,不必自己找。</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 4v10m0 0-4-4m4 4 4-4M5 19h14"/></svg></div>
+          <h3 data-i18n="f5t">自動更新</h3>
+          <p data-i18n="f5d">啟動時檢查新版本,有更新時可以直接在啟動器裡完成。</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9S14.600 18.400 12 21c-2.600-2.600-3.800-5.600-3.800-9S9.400 5.600 12 3Z"/></svg></div>
+          <h3 data-i18n="f6t">中文與 English</h3>
+          <p data-i18n="f6d">介面支援繁體中文與英文,可以隨時切換。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="client">
+    <div class="wrap client">
+      <div>
+        <div class="eyebrow">CubeNova Client</div>
+        <h2 style="font-size:clamp(1.8rem,3.6vw,2.5rem);margin-top:10px" data-i18n="cl_title">內建的 Fabric 客戶端 Mod</h2>
+        <p style="margin-top:14px;color:var(--muted);font-size:1.04rem" data-i18n="cl_lead">啟動器會替每個實例裝好 CubeNova Client。按 Right Shift 打開選單,拖曳 HUD 到喜歡的位置。</p>
+        <div class="mods">
+          <div><b data-i18n="c1t">HUD 模組</b><span data-i18n="c1d">FPS、CPS、座標等資訊,可以開關、拖曳。</span></div>
+          <div><b>Freelook</b><span data-i18n="c2d">按住左 Alt 自由環顧四周,放開後視角回到原本方向。</span></div>
+          <div><b data-i18n="c3t">自訂披風與鞘翅</b><span data-i18n="c3d">選任何圖片、裁切後自動適配,只在你自己的畫面顯示。</span></div>
+          <div><b>FPS Boost</b><span data-i18n="c4d">預設自動安裝 Sodium 等優化模組並加上 JVM 參數,可在設定關閉。</span></div>
+          <div><b data-i18n="c5t">自動適配介面大小</b><span data-i18n="c5d">不管遊戲介面大小設成多少,HUD 與選單都不會過大。</span></div>
+        </div>
+        <div class="vers">
+          <small data-i18n="c_ver">支援版本</small>
+          <span class="chip g">1.20.1</span><span class="chip g">1.21.1</span><span class="chip g">1.21.4</span><span class="chip g">26.2</span>
+        </div>
+      </div>
+
+      <div class="demo">
+        <div class="screen" id="screen">
+          <div class="hud" id="hud">
+            <div>FPS 248</div>
+            <div>CPS 6 | 4</div>
+            <div>XYZ 128 / 72 / -340</div>
+          </div>
+          <div class="cross"></div>
+        </div>
+        <div class="ctrls">
+          <label data-i18n="d_scale">遊戲介面大小</label>
+          <div class="seg" id="gs" role="group" aria-label="GUI scale">
+            <button type="button" data-gs="1" aria-pressed="false">1</button>
+            <button type="button" data-gs="2" aria-pressed="false">2</button>
+            <button type="button" data-gs="3" aria-pressed="false">3</button>
+            <button type="button" data-gs="4" aria-pressed="true" data-i18n="d_auto">自動 (4)</button>
+          </div>
+          <label data-i18n="d_fit">自動適配</label>
+          <div class="seg" id="fit" role="group" aria-label="Auto scaling">
+            <button type="button" data-fit="0" aria-pressed="false" data-i18n="d_off">關</button>
+            <button type="button" data-fit="1" aria-pressed="true" data-i18n="d_on">開</button>
+          </div>
+        </div>
+        <p class="demo-note" data-i18n="d_note">示意圖(以 1920×1080 視窗為例,畫面已放大),「自動」會選到介面大小 4。關閉適配時 HUD 會跟著變大,開啟後固定在約介面大小 2 的尺寸。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="download" class="alt">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow" data-i18n="nav_download">下載</div>
+        <h2 data-i18n="dl_title">下載 CubeNova</h2>
+        <p data-i18n="dl_lead">啟動器使用 .NET 8 與 WebView2,目前支援 Windows。CubeNova Client 會由啟動器自動安裝,通常不需要另外下載。</p>
+      </div>
+      <div class="dl">
+        <div class="card">
+          <h3 data-i18n="dl1t">CubeNova 啟動器</h3>
+          <div class="row"><span class="chip">Windows</span><span class="chip">.NET 8</span><span class="chip">WebView2</span></div>
+          <div class="btns">
+            <a class="btn primary dl-link" data-path="/releases/latest" href="#download" aria-disabled="true" data-i18n="dl_btn">下載最新版</a>
+            <a class="btn ghost dl-link" data-path="" href="#download" aria-disabled="true" data-i18n="dl_src">原始碼</a>
+          </div>
+          <p class="sub dl-note" data-i18n="dl_soon">下載連結即將開放。</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="dl2t">自己建置 Client Mod</h3>
+          <div class="row"><span class="chip">JDK 21</span><span class="chip">JDK 25 (26.2)</span><span class="chip">Gradle</span></div>
+          <p class="sub" data-i18n="dl2d">原始碼裡每個版本一個資料夾,執行 build-all.bat 就能一次建置全部版本。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow" data-i18n="nav_faq">常見問題</div>
+        <h2 data-i18n="faq_title">先回答幾個常見的問題</h2>
+      </div>
+      <div class="faq">
+        <details><summary data-i18n="q1">支援 Forge 或 Quilt 嗎?</summary><p data-i18n="a1">目前只支援 Fabric。這是刻意的選擇,讓安裝、更新和 Client Mod 都能保持簡單穩定。</p></details>
+        <details><summary data-i18n="q2">自訂披風其他玩家看得到嗎?</summary><p data-i18n="a2">看不到。披風與鞘翅只存在你自己的電腦上,只會顯示在你自己的畫面裡,不會上傳到任何伺服器。</p></details>
+        <details><summary data-i18n="q3">FPS Boost 會改我的畫面設定嗎?</summary><p data-i18n="a3">不會。它會安裝 Sodium、Lithium 等優化模組並加上 JVM 參數,不會更動你原本的 Minecraft 畫面設定。不想用的話,可以在啟動器設定關掉。</p></details>
+        <details><summary data-i18n="q4">我的介面大小是「自動」,HUD 太大怎麼辦?</summary><p data-i18n="a4">更新到支援自動縮放的版本即可。HUD 與選單會依介面大小與視窗大小自動調整,選單一定放得進畫面。</p></details>
+        <details><summary data-i18n="q5">CubeNova 和 Mojang、Microsoft 有關係嗎?</summary><p data-i18n="a5">沒有。CubeNova 是獨立的第三方啟動器。Minecraft 是 Mojang Studios 的商標。</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="icon.png" alt="">CubeNova</a>
+    <span data-i18n="foot">CubeNova 不隸屬於 Mojang Studios 或 Microsoft。</span>
+  </div>
+</footer>
+
+<script>
+// Set this to the project's GitHub repository, e.g. "https://github.com/owner/CubeNova", to enable the download buttons.
+var REPO_URL = "https://github.com/johnny87lol2/CubeNova-Client";
+
+var T = {
+  zh: {
+    nav_features: "功能", nav_client: "CubeNova Client", nav_download: "下載", nav_faq: "常見問題",
+    hero_title: "輕巧、快速的<br><em>Fabric</em> 啟動器",
+    hero_lead: "CubeNova 只專注在 Fabric。自動安裝 Java、一鍵從 Modrinth 安裝模組,內建的 CubeNova Client 讓你一進遊戲就有 HUD、Freelook 和更高的 FPS。",
+    cta_dl: "下載 CubeNova", cta_client: "看看 Client Mod",
+    fact1: "離線與 Microsoft 帳號", fact2: "開源", fact3: "自動更新",
+    m_play: "開始遊玩", m_inst: "實例", m_store: "模組商店", m_cape: "披風", m_set: "設定",
+    m_last: "上次遊玩", m_btn: "啟動", m_java: "正在準備 Java", m_acc: "帳號",
+    feat_title: "少一點選項,多一點好用",
+    feat_lead: "不用先搞懂 Forge、Quilt 或一堆版本。選版本、按啟動,其餘交給啟動器。",
+    f1t: "只做 Fabric", f1d: "專心把一個模組載入器做好,安裝與更新都不需要額外設定。",
+    f2t: "離線與 Microsoft 帳號", f2d: "可以用正版 Microsoft 帳號登入,也可以用離線帳號直接開始。",
+    f3t: "Modrinth 模組商店", f3d: "在啟動器裡搜尋並安裝模組,會自動挑選相容目前版本的檔案。",
+    f4t: "自動安裝 Java", f4d: "每個 Minecraft 版本需要的 Java 都會自動下載,不必自己找。",
+    f5t: "自動更新", f5d: "啟動時檢查新版本,有更新時可以直接在啟動器裡完成。",
+    f6t: "中文與 English", f6d: "介面支援繁體中文與英文,可以隨時切換。",
+    cl_title: "內建的 Fabric 客戶端 Mod",
+    cl_lead: "啟動器會替每個實例裝好 CubeNova Client。按 Right Shift 打開選單,拖曳 HUD 到喜歡的位置。",
+    c1t: "HUD 模組", c1d: "FPS、CPS、座標等資訊,可以開關、拖曳。",
+    c2d: "按住左 Alt 自由環顧四周,放開後視角回到原本方向。",
+    c3t: "自訂披風與鞘翅", c3d: "選任何圖片、裁切後自動適配,只在你自己的畫面顯示。",
+    c4d: "預設自動安裝 Sodium 等優化模組並加上 JVM 參數,可在設定關閉。",
+    c5t: "自動適配介面大小", c5d: "不管遊戲介面大小設成多少,HUD 與選單都不會過大。",
+    c_ver: "支援版本",
+    d_scale: "遊戲介面大小", d_auto: "自動 (4)", d_fit: "自動適配", d_off: "關", d_on: "開",
+    d_note: "示意圖(以 1920×1080 視窗為例,畫面已放大),「自動」會選到介面大小 4。關閉適配時 HUD 會跟著變大,開啟後固定在約介面大小 2 的尺寸。",
+    dl_title: "下載 CubeNova",
+    dl_lead: "啟動器使用 .NET 8 與 WebView2,目前支援 Windows。CubeNova Client 會由啟動器自動安裝,通常不需要另外下載。",
+    dl1t: "CubeNova 啟動器", dl_btn: "下載最新版", dl_src: "原始碼", dl_soon: "下載連結即將開放。",
+    dl2t: "自己建置 Client Mod", dl2d: "原始碼裡每個版本一個資料夾,執行 build-all.bat 就能一次建置全部版本。",
+    faq_title: "先回答幾個常見的問題",
+    q1: "支援 Forge 或 Quilt 嗎?", a1: "目前只支援 Fabric。這是刻意的選擇,讓安裝、更新和 Client Mod 都能保持簡單穩定。",
+    q2: "自訂披風其他玩家看得到嗎?", a2: "看不到。披風與鞘翅只存在你自己的電腦上,只會顯示在你自己的畫面裡,不會上傳到任何伺服器。",
+    q3: "FPS Boost 會改我的畫面設定嗎?", a3: "不會。它會安裝 Sodium、Lithium 等優化模組並加上 JVM 參數,不會更動你原本的 Minecraft 畫面設定。不想用的話,可以在啟動器設定關掉。",
+    q4: "我的介面大小是「自動」,HUD 太大怎麼辦?", a4: "更新到支援自動縮放的版本即可。HUD 與選單會依介面大小與視窗大小自動調整,選單一定放得進畫面。",
+    q5: "CubeNova 和 Mojang、Microsoft 有關係嗎?", a5: "沒有。CubeNova 是獨立的第三方啟動器。Minecraft 是 Mojang Studios 的商標。",
+    foot: "CubeNova 不隸屬於 Mojang Studios 或 Microsoft。"
+  },
+  en: {
+    nav_features: "Features", nav_client: "CubeNova Client", nav_download: "Download", nav_faq: "FAQ",
+    hero_title: "A light, fast<br><em>Fabric</em> launcher",
+    hero_lead: "CubeNova focuses on Fabric only. It installs Java for you, adds mods from Modrinth in one click, and ships with CubeNova Client so you start with a HUD, Freelook and higher FPS.",
+    cta_dl: "Download CubeNova", cta_client: "See the Client mod",
+    fact1: "Offline & Microsoft accounts", fact2: "Open source", fact3: "Auto-update",
+    m_play: "Play", m_inst: "Instances", m_store: "Mod store", m_cape: "Capes", m_set: "Settings",
+    m_last: "Last played", m_btn: "Launch", m_java: "Preparing Java", m_acc: "Account",
+    feat_title: "Fewer options, more that just works",
+    feat_lead: "No need to learn Forge, Quilt or a pile of versions first. Pick a version, press launch, and the launcher handles the rest.",
+    f1t: "Fabric only", f1d: "One mod loader, done well. Installing and updating need no extra setup.",
+    f2t: "Offline & Microsoft accounts", f2d: "Sign in with a Microsoft account, or start right away with an offline one.",
+    f3t: "Modrinth mod store", f3d: "Search and install mods inside the launcher. It picks the file that matches your version.",
+    f4t: "Automatic Java", f4d: "The Java each Minecraft version needs is downloaded for you.",
+    f5t: "Auto-update", f5d: "Checks for new versions on start and can update right from the launcher.",
+    f6t: "中文 and English", f6d: "The interface supports Traditional Chinese and English, switchable any time.",
+    cl_title: "A built-in Fabric client mod",
+    cl_lead: "The launcher installs CubeNova Client into every instance. Press Right Shift to open the menu and drag the HUD where you like.",
+    c1t: "HUD modules", c1d: "FPS, CPS, coordinates and more. Toggle and drag them.",
+    c2d: "Hold Left Alt to look around freely, release to return to your original view.",
+    c3t: "Custom cape & elytra", c3d: "Pick any image, crop it, and it fits automatically. Only you see it.",
+    c4d: "Installs Sodium and friends plus JVM flags by default. Turn it off in Settings.",
+    c5t: "Auto-fit UI scale", c5d: "However high your GUI scale is, the HUD and menu stay a sensible size.",
+    c_ver: "Versions",
+    d_scale: "Game GUI scale", d_auto: "Auto (4)", d_fit: "Auto-fit", d_off: "Off", d_on: "On",
+    d_note: "Illustration, enlarged, for a 1920×1080 window, where \"Auto\" picks GUI scale 4. With auto-fit off the HUD grows with it; with it on, the HUD stays near GUI scale 2.",
+    dl_title: "Download CubeNova",
+    dl_lead: "The launcher uses .NET 8 and WebView2 and currently supports Windows. The launcher installs CubeNova Client for you, so you usually don't need to download it separately.",
+    dl1t: "CubeNova launcher", dl_btn: "Download latest", dl_src: "Source code", dl_soon: "Download links are coming soon.",
+    dl2t: "Build the client mod yourself", dl2d: "The source has one folder per version. Run build-all.bat to build every version at once.",
+    faq_title: "A few common questions",
+    q1: "Does it support Forge or Quilt?", a1: "Fabric only, on purpose. It keeps installs, updates and the client mod simple and stable.",
+    q2: "Can other players see my custom cape?", a2: "No. Capes and elytra stay on your own computer and only show on your own screen. Nothing is uploaded to a server.",
+    q3: "Does FPS Boost change my video settings?", a3: "No. It installs optimization mods such as Sodium and Lithium and adds JVM flags, and leaves your Minecraft video settings alone. You can turn it off in the launcher settings.",
+    q4: "My GUI scale is Auto and the HUD is too big. What now?", a4: "Update to a version with auto scaling. The HUD and menu adjust to your GUI scale and window size, and the menu always fits on screen.",
+    q5: "Is CubeNova affiliated with Mojang or Microsoft?", a5: "No. CubeNova is an independent third-party launcher. Minecraft is a trademark of Mojang Studios.",
+    foot: "CubeNova is not affiliated with Mojang Studios or Microsoft."
+  }
+};
+
+function setLang(l) {
+  var d = T[l];
+  document.documentElement.lang = l === "zh" ? "zh-Hant" : "en";
+  document.querySelectorAll("[data-i18n]").forEach(function (el) { var k = el.getAttribute("data-i18n"); if (d[k] != null) el.textContent = d[k]; });
+  document.querySelectorAll("[data-i18n-html]").forEach(function (el) { var k = el.getAttribute("data-i18n-html"); if (d[k] != null) el.innerHTML = d[k]; });
+  document.querySelectorAll(".lang button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.lang === l ? "true" : "false"); });
+  try { localStorage.setItem("cn-lang", l); } catch (e) {}
+}
+document.querySelectorAll(".lang button").forEach(function (b) { b.addEventListener("click", function () { setLang(b.dataset.lang); }); });
+var saved = null;
+try { saved = localStorage.getItem("cn-lang"); } catch (e) {}
+setLang(saved === "zh" ? "zh" : "en");
+
+// GUI scale demo
+var screenEl = document.getElementById("screen"), hud = document.getElementById("hud");
+var gs = 4, fit = true;
+function paint() {
+  screenEl.style.setProperty("--gs", gs);
+  screenEl.style.setProperty("--eff", Math.min(gs, 2));
+  hud.classList.toggle("manual", !fit);
+  document.querySelectorAll("#gs button").forEach(function (b) { b.setAttribute("aria-pressed", +b.dataset.gs === gs ? "true" : "false"); });
+  document.querySelectorAll("#fit button").forEach(function (b) { b.setAttribute("aria-pressed", (b.dataset.fit === "1") === fit ? "true" : "false"); });
+}
+document.querySelectorAll("#gs button").forEach(function (b) { b.addEventListener("click", function () { gs = +b.dataset.gs; paint(); }); });
+document.querySelectorAll("#fit button").forEach(function (b) { b.addEventListener("click", function () { fit = b.dataset.fit === "1"; paint(); }); });
+paint();
+
+// Download buttons stay disabled until REPO_URL is set
+if (REPO_URL) {
+  document.querySelectorAll(".dl-link").forEach(function (a) { a.href = REPO_URL.replace(/\/$/, "") + a.dataset.path; a.target = "_blank"; a.rel = "noopener"; a.removeAttribute("aria-disabled"); });
+  var n = document.querySelector(".dl-note"); if (n) n.hidden = true;
+}
+</script>
+
+</body></html>
